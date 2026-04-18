@@ -1,0 +1,132 @@
+[gd_scene load_steps=10 format=3 uid="uid://bbw2j1hwor42c"]
+
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_3m38j"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_q4ptn"]
+[ext_resource type="Script" path="res://scripts/coin.gd" id="2_kfmv7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(1400, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_a"]
+size = Vector2(280, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform_b"]
+size = Vector2(260, 30)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_coin"]
+radius = 16.0
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_q4ptn")
+
+[node name="Player" parent="." instance=ExtResource("1_3m38j")]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(500, -150)
+enabled = true
+limit_left = 0
+limit_top = -400
+limit_right = 2600
+limit_bottom = 900
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Floor" type="StaticBody2D" parent="World"]
+position = Vector2(640, 700)
+
+[node name="Polygon2D" type="Polygon2D" parent="World/Floor"]
+polygon = PackedVector2Array(-700, -40, 700, -40, 700, 40, -700, 40)
+color = Color(0.2, 0.23, 0.27, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Floor"]
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="PlatformA" type="StaticBody2D" parent="World"]
+position = Vector2(520, 560)
+
+[node name="Polygon2D" type="Polygon2D" parent="World/PlatformA"]
+polygon = PackedVector2Array(-140, -15, 140, -15, 140, 15, -140, 15)
+color = Color(0.34, 0.4, 0.47, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/PlatformA"]
+shape = SubResource("RectangleShape2D_platform_a")
+
+[node name="PlatformB" type="StaticBody2D" parent="World"]
+position = Vector2(980, 450)
+
+[node name="Polygon2D" type="Polygon2D" parent="World/PlatformB"]
+polygon = PackedVector2Array(-130, -15, 130, -15, 130, 15, -130, 15)
+color = Color(0.34, 0.4, 0.47, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/PlatformB"]
+shape = SubResource("RectangleShape2D_platform_b")
+
+[node name="PlatformC" type="StaticBody2D" parent="World"]
+position = Vector2(1420, 340)
+
+[node name="Polygon2D" type="Polygon2D" parent="World/PlatformC"]
+polygon = PackedVector2Array(-130, -15, 130, -15, 130, 15, -130, 15)
+color = Color(0.34, 0.4, 0.47, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/PlatformC"]
+shape = SubResource("RectangleShape2D_platform_b")
+
+[node name="Coins" type="Node2D" parent="."]
+
+[node name="Coin1" type="Area2D" parent="Coins"]
+position = Vector2(520, 500)
+script = ExtResource("2_kfmv7")
+groups = ["coins"]
+
+[node name="Polygon2D" type="Polygon2D" parent="Coins/Coin1"]
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+color = Color(1, 0.84, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coins/Coin1"]
+shape = SubResource("CircleShape2D_coin")
+
+[node name="Coin2" type="Area2D" parent="Coins"]
+position = Vector2(980, 390)
+script = ExtResource("2_kfmv7")
+groups = ["coins"]
+
+[node name="Polygon2D" type="Polygon2D" parent="Coins/Coin2"]
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+color = Color(1, 0.84, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coins/Coin2"]
+shape = SubResource("CircleShape2D_coin")
+
+[node name="Coin3" type="Area2D" parent="Coins"]
+position = Vector2(1420, 280)
+script = ExtResource("2_kfmv7")
+groups = ["coins"]
+
+[node name="Polygon2D" type="Polygon2D" parent="Coins/Coin3"]
+polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+color = Color(1, 0.84, 0.2, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coins/Coin3"]
+shape = SubResource("CircleShape2D_coin")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="StatusLabel" type="Label" parent="UI"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 480.0
+offset_bottom = 80.0
+text = "金幣：0 / 0"
+theme_override_font_sizes/font_size = 34
+
+[node name="HintLabel" type="Label" parent="UI"]
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 640.0
+offset_bottom = 120.0
+text = "A/D 移動，空白鍵跳躍，R 重新開始"
+theme_override_font_sizes/font_size = 24
+
+[connection signal="body_entered" from="Coins/Coin1" to="Coins/Coin1" method="_on_body_entered"]
+[connection signal="body_entered" from="Coins/Coin2" to="Coins/Coin2" method="_on_body_entered"]
+[connection signal="body_entered" from="Coins/Coin3" to="Coins/Coin3" method="_on_body_entered"]
